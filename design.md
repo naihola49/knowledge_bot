@@ -49,6 +49,7 @@ class GraphState(TypedDict, total=False):
     max_loops: int
     store_ready: bool
     exit_reason: Literal["continue", "done", "max_loops", "manual_review"]
+    weak_topics: list[str]
 
     daily_notes_path: str
     output_1: "Output1"
@@ -63,11 +64,16 @@ class Output1(TypedDict):
     day: str
     comprehension_score: float
     needs_clarification: bool
+    weak_topics: list[str] | None # when looped
+    cleaned_summary: str
 
 class Output2(TypedDict, total=False):
-    topic: str
-    error_explanation: str
-    confidence: float
+    topics: list[dict]
+        """ dict contains below key-value pairs
+        topic: str
+        error_explanation: str
+        confidence: float
+        """
 
 class Output3(TypedDict):
     research_md_path: str
@@ -77,4 +83,6 @@ class Output4(TypedDict):
     day: str
     success: bool
     synthesis_txt_path: str
+    retrieved_chunk_ids: list[str]
+    synthesis_text: str
 ```

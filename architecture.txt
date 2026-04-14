@@ -1,0 +1,35 @@
+book_companion/
+├── main.py                  # entry point
+├── graph.py                 # graph assembly only
+├── state.py                 # GraphState + all Output TypedDicts
+├── config.py                # constants, env vars, max_loops, model names
+│
+├── nodes/
+│   ├── __init__.py
+│   ├── comprehension.py     # Node 1
+│   ├── clarification.py     # Node 2
+│   ├── research.py          # Node 3
+│   ├── synthesis.py         # Node 4
+│   └── store.py             # Node 5
+│
+├── edges/
+│   ├── __init__.py
+│   └── routing.py           # all conditional edge functions live here
+│
+├── services/
+│   ├── __init__.py
+│   ├── llm.py               # model instantiation, one place
+│   ├── chroma.py            # all vector DB interactions
+│   └── embeddings.py        # embedding logic
+│
+├── agent_docs/
+│   ├── ddia.md
+│   ├── stat110.md
+│   └── blitzstein.md
+│
+├── research/                # Node 3 output lands here
+├── synthesis/               # Node 4 output lands here
+│
+└── tests/
+    ├── test_comprehension.py
+    └── test_routing.py
