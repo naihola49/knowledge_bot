@@ -1,2 +1,5 @@
-# environmens
+# environments
 venv/
+
+# environment variables
+.env.dev
