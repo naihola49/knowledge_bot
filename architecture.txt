@@ -7,6 +7,10 @@ book_companion/
 ├── nodes/
 │   ├── __init__.py
 │   ├── comprehension.py     # Node 1
+|   |   |-- embedding.py (embed both user input + chunked raw text)
+|   |   |-- chunking.py (chunk raw content)
+|   |   |-- retrieval.py (retrieve user_input + nearest k chunks) [keep meta data]
+|   |   |-- nlinfer.py (aggregate k_chunk (premise) vs user_input (hypothesis))
 │   ├── clarification.py     # Node 2
 │   ├── research.py          # Node 3
 │   ├── synthesis.py         # Node 4

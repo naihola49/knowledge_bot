@@ -1,24 +1,35 @@
-"""State contracts for the LangGraph workflow defined in architecture.txt"""
+"""State contracts for the LangGraph workflow defined in architecture.txt."""
 
 from typing import Literal, TypedDict
+# TypedDict v1, switch to pydantic v2 for type safety!
+
+class RetrievedChunk(TypedDict):
+    chunk_id: str
+    text: str
+    similarity: float # cosine sim! < magnitude agnostic > 
 
 
-class TopicIssue(TypedDict):
-    topic: str
-    error_explanation: str
-    confidence: float
+class NLIResult(TypedDict):
+    chunk_id: str
+    entailment: float # 2
+    neutral: float # 1
+    contradiction: float # 0
 
 
 class Output1(TypedDict):
     day: str
-    comprehension_score: float
+    comprehension_score: float  # final Node 1 score after retrieval + NLI aggregation
     needs_clarification: bool
     weak_topics: list[str] | None
-    cleaned_summary: str
+    user_input: str
+    retrieved_chunks: list[RetrievedChunk]
+    nli_results: list[NLIResult]
+    coverage_score: float
+    contradiction_score: float
 
 
 class Output2(TypedDict, total=False):
-    topics: list[TopicIssue]
+    topics: list[dict]
 
 
 class Output3(TypedDict):
@@ -42,7 +53,8 @@ class GraphState(TypedDict, total=False):
     store_ready: bool
     exit_reason: Literal["continue", "done", "max_loops", "manual_review"]
     weak_topics: list[str]
-    daily_notes_path: str
+    raw_content_path: str
+    user_input_path: str
     output_1: Output1
     output_2: Output2
     output_3: Output3
