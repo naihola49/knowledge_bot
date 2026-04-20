@@ -1,0 +1,8 @@
+To keep track:
+
+Because this workflow is daily, I do not want to persist vector embeddings to a historical
+database (chromadb). Processing each chunked vector daily for semantic search + retrieval is sufficient,
+chromadb operations is removed from services package. 
+
+Instead, create a local same-day cache so embeddings occur once, and can be referenced downstream
+for clarification loop if semantic understanding is weak.
