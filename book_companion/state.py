@@ -28,8 +28,14 @@ class Output1(TypedDict):
     contradiction_score: float
 
 
+class ClarificationTopic(TypedDict):
+    topic: str
+    error_explanation: str
+    confidence: float
+
+
 class Output2(TypedDict, total=False):
-    topics: list[dict]
+    topics: list[ClarificationTopic]
 
 
 class Output3(TypedDict):

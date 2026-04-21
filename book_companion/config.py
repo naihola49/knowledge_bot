@@ -23,3 +23,12 @@ HF_INFERENCE_MIN_INTERVAL_SECONDS = 1.5
 NLI_MODEL_NAME = "facebook/bart-large-mnli"
 NLI_MAX_SEQ_LENGTH = 512 # longer truncate
 TOP_K_RETRIEVAL = 3 # embeddings in local cache parameter 
+
+"""
+Node 2
+"""
+HIGH_CONTRADICTION_THRESHOLD = 0.7
+LOW_COVERAGE_THRESHOLD = 0.35
+MAX_TOPICS_DEFAULT = 3
+# Max chars of source/user text quoted inside Node 2 research briefs for the LLM.
+RESEARCH_TOPIC_SNIPPET_MAX_CHARS = 320

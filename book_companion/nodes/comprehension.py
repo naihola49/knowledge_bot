@@ -9,6 +9,7 @@ from typing import TypedDict
 from book_companion.config import (
     CLARIFICATION_TRIGGER_SCORE,
     COMPREHENSION_PASS_SCORE,
+    HIGH_CONTRADICTION_THRESHOLD,
     MAX_LOOPS,
     MIN_WORD_COUNT,
     TOP_K_RETRIEVAL,
@@ -30,10 +31,12 @@ def _count_words(text: str) -> int:
 
 def _derive_weak_topics(nli_results: list[dict], contradiction_score: float) -> list[str] | None:
     weak_topics: list[str] = []
-    contradiction_chunks = [item["chunk_id"] for item in nli_results if item["contradiction"] >= 0.7]
+    contradiction_chunks = [
+        item["chunk_id"] for item in nli_results if item["contradiction"] >= HIGH_CONTRADICTION_THRESHOLD
+    ]
     if contradiction_chunks:
         weak_topics.extend(contradiction_chunks)
-    if contradiction_score >= 0.7:
+    if contradiction_score >= HIGH_CONTRADICTION_THRESHOLD:
         weak_topics.append("high contradiction overall")
     return weak_topics or None
 
@@ -131,7 +134,7 @@ def run_premise_hypothesis_pipeline(
 
 
 def run_comprehension_node(state: GraphState) -> GraphState:
-    """Read source + user input, run chunk → embed → retrieve → NLI, write output_1."""
+    """Read source + user input, run chunk → embed → retrieve → NLI, write output_1"""
     raw_content_path = Path(state["raw_content_path"])
     user_input_path = Path(state["user_input_path"])
     raw_content = raw_content_path.read_text(encoding="utf-8")
@@ -147,7 +150,7 @@ def run_comprehension_node(state: GraphState) -> GraphState:
     needs_clarification = (
         word_count < MIN_WORD_COUNT
         or stage["comprehension_score"] < CLARIFICATION_TRIGGER_SCORE
-        or stage["contradiction_score"] >= 0.7
+        or stage["contradiction_score"] >= HIGH_CONTRADICTION_THRESHOLD
     )
 
     output_1: Output1 = {
