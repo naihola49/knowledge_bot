@@ -1,4 +1,4 @@
-"""Test hooks: load repo-root .env.dev so HF_TOKEN is available for integration tests."""
+"""Shared test hooks: load repo-root .env.dev for all test folders."""
 
 from __future__ import annotations
 
@@ -26,3 +26,4 @@ def _load_env_file(path: Path) -> None:
 def pytest_configure() -> None:
     repo_root = Path(__file__).resolve().parents[2]
     _load_env_file(repo_root / ".env.dev")
+

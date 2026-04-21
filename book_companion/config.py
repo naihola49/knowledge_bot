@@ -32,3 +32,11 @@ LOW_COVERAGE_THRESHOLD = 0.35
 MAX_TOPICS_DEFAULT = 3
 # Max chars of source/user text quoted inside Node 2 research briefs for the LLM.
 RESEARCH_TOPIC_SNIPPET_MAX_CHARS = 320
+
+"""
+Node 3 / premise ingestion
+"""
+TAVILY_API_KEY_ENV_VAR = "TAVILY_API_KEY"
+TAVILY_MAX_RESULTS_PER_QUERY = 5
+# "advanced" can be enabled later if needed
+TAVILY_EXTRACT_DEPTH: str | None = None

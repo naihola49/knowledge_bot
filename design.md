@@ -8,6 +8,8 @@ Personal Research/Knowledge Tool
 
 # Schema
 ## Node 1: Comprehension Check
+[Potential] - Use scraping logic developed for node 3 to fetch articles of interest
+
 Input: Daily_Notes.txt, >200 words long to trigger workflow
 Output: JSON payload with fields day=, comprehension_score= [call this output_1 for ease]
 Added: Embedding (through HF's Inference Client [Google/gemma])  + Local Natural Language Inference (Local Tokenization [facebook/bart])
@@ -24,11 +26,20 @@ Input: Output_1
 Output: Output_2
 
 
-Node 3: Research [Conditional ]
+## Node 3: Research [Conditional ]
 Research conducted through access to web browser, builds .md file with research focused on WHY/How does this topic work. Returns this markdown file to user (visually and saved locally), then triggers UI component for user to "try again" with a section space that creates a .txt file to trigger Node 1 once more.
+Update 4/21: Build sub-graph with LLM-reasoning
+- Nodes: [dedicated skills folder]
+- Search (using Tavily): return URLs pertaining to the topic + extract
+- Create_markdown: create artifact
+- Judge: reasons through artifact
+- Researcher: if artifact quality poor (need to determine this), revises max(2, current)
+Ouput_3 = Judge or Judge+Researcher 
+
+Once saved, text inbox rendered for new learnings. Passed into comprehension check and +1 loop!
 
 Input: output_2
-Output: Output_3 as a markdown file returned to user, saved under research dir. User reads then inputs learnings/notes into a .txt file causing loop. This is an interruption in workflow designed to place human in the loop.
+Output: Output_3 as a markdown file returned to user, saved under research dir (store artifact). User reads then inputs learnings/notes into a .txt file causing loop. This is an interruption in workflow designed to place human in the loop.
 
 Node 4: Synthesis
 Compares against prior nodes to track growth in learning.
