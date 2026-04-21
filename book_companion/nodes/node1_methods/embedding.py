@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Iterable
 
+from book_companion.services.embedding_cache import SameDayCachedEmbeddingsClient
 from book_companion.services.embeddings import EmbeddingsClient, HFInferenceEmbeddingsClient
 
 _CLIENT: EmbeddingsClient | None = None
@@ -12,7 +13,7 @@ _CLIENT: EmbeddingsClient | None = None
 def _get_client() -> EmbeddingsClient:
     global _CLIENT
     if _CLIENT is None:
-        _CLIENT = HFInferenceEmbeddingsClient()
+        _CLIENT = SameDayCachedEmbeddingsClient(HFInferenceEmbeddingsClient()) # wrap in cache
     return _CLIENT
 
 

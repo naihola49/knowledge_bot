@@ -6,4 +6,5 @@ venv/
 .env
 
 learnings.md
+update.md 
 __pycache__/

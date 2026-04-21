@@ -6,11 +6,11 @@ book_companion/
 │
 ├── nodes/
 │   ├── __init__.py
-│   ├── comprehension.py     # Node 1
-|   |   |-- embedding.py (embed both user input + chunked raw text)
-|   |   |-- chunking.py (chunk raw content)
-|   |   |-- retrieval.py (retrieve user_input + nearest k chunks) [keep meta data]
-|   |   |-- nlinfer.py (aggregate k_chunk (premise) vs user_input (hypothesis))
+│   ├── comprehension.py     # Node 1: orchestrates chunk → embed → retrieve → NLI
+|   |   |-- node1_methods/embedding.py (embed user input + chunked raw text)
+|   |   |-- node1_methods/chunking.py (chunk raw content)
+|   |   |-- node1_methods/retrieval.py (nearest k chunks to user input (cos sim)) [keep metadata]
+|   |   |-- services/bart_nli_inference.py (merged premise vs hypothesis)
 │   ├── clarification.py     # Node 2
 │   ├── research.py          # Node 3
 │   ├── synthesis.py         # Node 4

@@ -1,2 +1,2 @@
-"""Node 1 helper methods package."""
+"""Node 1 helper methods package"""
 
