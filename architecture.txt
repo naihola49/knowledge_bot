@@ -19,17 +19,15 @@ book_companion/
 ├── edges/
 │   ├── __init__.py
 │   └── routing.py           # all conditional edge functions live here
+│       # TODO: add pydantic validation gate between Node 1 output and Node 2 input
 │
 ├── services/
 │   ├── __init__.py
 │   ├── llm.py               # model instantiation, one place
-│   ├── chroma.py            # all vector DB interactions
 │   └── embeddings.py        # embedding logic
 │
 ├── agent_docs/
-│   ├── ddia.md
-│   ├── stat110.md
-│   └── blitzstein.md
+│   └── corpus.md        # figure this out!
 │
 ├── research/                # Node 3 output lands here
 ├── synthesis/               # Node 4 output lands here

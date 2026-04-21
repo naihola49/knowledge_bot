@@ -3,6 +3,9 @@
 MIN_WORD_COUNT = 200
 MAX_LOOPS = 3
 
+"""
+Node 1
+"""
 # Node 1 threshold 
 COMPREHENSION_PASS_SCORE = 2 # from NLI
 CLARIFICATION_TRIGGER_SCORE = 1 # from NLI
