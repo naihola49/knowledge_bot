@@ -2,17 +2,14 @@
 
 from __future__ import annotations
 
-import os
 from collections.abc import Mapping
 from typing import Any, Protocol
 
-from tavily import TavilyClient
-
 from book_companion.config import (
-    TAVILY_API_KEY_ENV_VAR,
     TAVILY_EXTRACT_DEPTH,
     TAVILY_MAX_RESULTS_PER_QUERY,
 )
+from book_companion.integrations.tavily import get_tavily_client
 from book_companion.premise_ingestion.models import PremiseDoc, PremiseIngestionRequest
 from book_companion.premise_ingestion.planner import build_query_plan
 
@@ -23,13 +20,6 @@ class TavilyLikeClient(Protocol):
 
     def extract(self, *, urls: list[str], extract_depth: str | None = None) -> Mapping[str, Any]:
         ...
-
-
-def _get_tavily_client(api_key_env_var: str = TAVILY_API_KEY_ENV_VAR) -> TavilyClient:
-    api_key = os.getenv(api_key_env_var)
-    if not api_key:
-        raise RuntimeError(f"Missing required environment variable: {api_key_env_var}")
-    return TavilyClient(api_key=api_key)
 
 
 def _to_float(value: object, default: float = 0.0) -> float:
@@ -52,7 +42,7 @@ def build_premises_with_tavily(
     The same URL can appear in multiple queries. Deduping is done by URL while keeping
     the highest-score search hit as the representative metadata row.
     """
-    tavily_client: TavilyLikeClient = client or _get_tavily_client()
+    tavily_client: TavilyLikeClient = client or get_tavily_client()
     query_plan = build_query_plan(request)
     if not query_plan:
         return []
