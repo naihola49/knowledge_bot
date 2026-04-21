@@ -6,16 +6,20 @@ Personal Research/Knowledge Tool
 - React based UI with dominant SSR, lightweight codegen for rendered markdown returned to user for node 3
 
 
-Schema
-Node 1: Comprehension Check
+# Schema
+## Node 1: Comprehension Check
 Input: Daily_Notes.txt, >200 words long to trigger workflow
 Output: JSON payload with fields day=, comprehension_score= [call this output_1 for ease]
+Added: Embedding (through HF's Inference Client [Google/gemma])  + Local Natural Language Inference (Local Tokenization [facebook/bart])
+
 If loop: proliferate on output_1x 
 
-Node 2: Clarification [Conditional ]
-If daily notes read weak grammatically/conceptually or inaccurate, node is triggered. To deem inaccurate, a powerful model will read through text, and based on it's training, will determine whether or not my ideas and communication work well. Will provide a directory called agent_docs that specifies what exactly I'm looking for, rather than building monolithinc system prompt.
-
-Idea space is then built with sub-agent with topics attached. Typed payload with fields topic= , error_explanation= (why my initial analysis was wrong) [output_2 for ease]. Max output tokens set extremely low for cost savings.
+## Node 2: Clarification [Conditional ]
+Update 4/21: Node ingests output_1 and builds context for downstream, conducted research. 
+- Weak_topics arg from output_1 utilized, contradiction (from nli) or weak coverage (based on cosine sim) is then passed into research builder.
+- All edge cases between contradiction & weak coverage (if hypothesis incongruous with range(1-k)  semantic chunks), builds confidence score using comprehension score (computed through nli in node 1)
+- Lowest confidence scorfes then passed in to research
+Max output tokens set extremely low for cost savings.
 Input: Output_1
 Output: Output_2
 

@@ -5,6 +5,5 @@ venv/
 .env.dev
 .env
 
-learnings.md
-update.md 
 __pycache__/
+personal/
