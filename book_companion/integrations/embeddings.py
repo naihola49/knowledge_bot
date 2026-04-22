@@ -14,7 +14,7 @@ from book_companion.config import (
     HF_INFERENCE_API_TIMEOUT_SECONDS,
     HF_TOKEN_ENV_VAR,
 )
-from book_companion.services.hf_inference_throttle import after_hf_request, before_hf_request
+from book_companion.integrations.hf_inference_throttle import after_hf_request, before_hf_request
 
 # Matches HF model-card examples (Inference Providers, not legacy api-inference URL).
 HF_INFERENCE_PROVIDER = "hf-inference"

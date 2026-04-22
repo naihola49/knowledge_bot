@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Iterable
 
-from book_companion.services.embedding_cache import SameDayCachedEmbeddingsClient
-from book_companion.services.embeddings import EmbeddingsClient, HFInferenceEmbeddingsClient
+from book_companion.integrations.embedding_cache import SameDayCachedEmbeddingsClient
+from book_companion.integrations.embeddings import EmbeddingsClient, HFInferenceEmbeddingsClient
 
 _CLIENT: EmbeddingsClient | None = None
 

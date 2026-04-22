@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import date
 from unittest.mock import MagicMock, patch
 
-from book_companion.services.embedding_cache import SameDayCachedEmbeddingsClient
+from book_companion.integrations.embedding_cache import SameDayCachedEmbeddingsClient
 
 
 def test_embed_text_cache_hit_calls_inner_once() -> None:
@@ -30,7 +30,7 @@ def test_embed_texts_batch_reuses_cached_rows() -> None:
     assert inner.embed_texts.call_count == 1
 
 
-@patch("book_companion.services.embedding_cache.date")
+@patch("book_companion.integrations.embedding_cache.date")
 def test_cache_clears_on_new_calendar_day(mock_date: MagicMock) -> None:
     # _roll_day_if_needed calls today() once per embed_text.
     mock_date.today.side_effect = [

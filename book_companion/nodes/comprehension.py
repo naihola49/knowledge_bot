@@ -21,7 +21,7 @@ from book_companion.nodes.node1_methods import (
     vectorize_text,
     vectorize_texts,
 )
-from book_companion.services.bart_nli_inference import get_bart_nli_client
+from book_companion.integrations.bart_nli_inference import get_bart_nli_client
 from book_companion.state import GraphState, NLIResult, Output1, RetrievedChunk
 
 

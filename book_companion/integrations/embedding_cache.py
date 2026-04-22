@@ -8,7 +8,7 @@ from datetime import date
 from typing import Iterable
 
 from book_companion.config import EMBEDDING_MODEL_NAME
-from book_companion.services.embeddings import EmbeddingsClient
+from book_companion.integrations.embeddings import EmbeddingsClient
 
 
 def _cache_key(model_name: str, text: str) -> str:
