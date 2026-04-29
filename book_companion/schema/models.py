@@ -57,6 +57,50 @@ class Output4Model(BaseModel):
     retrieved_chunk_ids: list[str]
     synthesis_text: str
 
+"""
+premise ingestion models 
+"""
+IntentKind = Literal["daily_interest", "correction_topic"]
+
+
+class InterestIntentModel(BaseModel):
+    topic: str = Field(min_length=1)
+    why_today: str | None = None
+    priority: float = Score
+
+
+class CorrectionIntentModel(BaseModel):
+    topic: str = Field(min_length=1)
+    error_explanation: str = Field(min_length=1)
+    confidence: float = Score
+
+
+class PremiseIngestionRequestModel(BaseModel):
+    day: str = Field(min_length=1)
+    daily_interests: list[InterestIntentModel] = Field(default_factory=list)
+    corrections: list[CorrectionIntentModel] = Field(default_factory=list)
+    max_queries: int = Field(default=8, ge=1)
+
+
+class QuerySpecModel(BaseModel):
+    query: str = Field(min_length=1)
+    intent_kind: IntentKind
+    topic: str = Field(min_length=1)
+    priority: float = Score
+    rationale: str | None = None
+
+
+class PremiseDocModel(BaseModel):
+    day: str = Field(min_length=1)
+    topic: str = Field(min_length=1)
+    intent_kind: IntentKind
+    query: str = Field(min_length=1)
+    url: str = Field(min_length=1)
+    title: str
+    snippet: str
+    source_score: float = Score
+    raw_content: str = Field(min_length=1)
+
 
 class GraphStateModel(BaseModel):
     model_config = ConfigDict(extra="allow")

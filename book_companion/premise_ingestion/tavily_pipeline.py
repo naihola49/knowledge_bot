@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from dataclasses import asdict
 from typing import Any, Protocol
 
 from book_companion.config import (
@@ -12,6 +13,7 @@ from book_companion.config import (
 from book_companion.integrations.tavily import get_tavily_client
 from book_companion.premise_ingestion.models import PremiseDoc, PremiseIngestionRequest
 from book_companion.premise_ingestion.planner import build_query_plan
+from book_companion.schema.validation import validate_premise_doc, validate_premise_ingestion_request
 
 
 class TavilyLikeClient(Protocol):
@@ -39,9 +41,9 @@ def build_premises_with_tavily(
     """
     Execute planning -> Tavily search -> Tavily extract and return normalized premise docs.
 
-    The same URL can appear in multiple queries. Deduping is done by URL while keeping
-    the highest-score search hit as the representative metadata row.
+    
     """
+    request = PremiseIngestionRequest(**validate_premise_ingestion_request(asdict(request)))
     tavily_client: TavilyLikeClient = client or get_tavily_client()
     query_plan = build_query_plan(request)
     if not query_plan:
@@ -96,19 +98,20 @@ def build_premises_with_tavily(
             continue
         intent_kind_raw = str(hit.get("_intent_kind", "daily_interest")).strip()
         intent_kind = "correction_topic" if intent_kind_raw == "correction_topic" else "daily_interest"
-        docs.append(
-            PremiseDoc(
-                day=request.day,
-                topic=str(hit.get("_topic", "")).strip(),
-                intent_kind=intent_kind,
-                query=str(hit.get("_query", "")).strip(),
-                url=url,
-                title=str(hit.get("title", "")).strip(),
-                snippet=str(hit.get("content", "")).strip(),
-                source_score=_to_float(hit.get("score")),
-                raw_content=raw,
-            )
+        validated_doc = validate_premise_doc(
+            {
+                "day": request.day,
+                "topic": str(hit.get("_topic", "")).strip(),
+                "intent_kind": intent_kind,
+                "query": str(hit.get("_query", "")).strip(),
+                "url": url,
+                "title": str(hit.get("title", "")).strip(),
+                "snippet": str(hit.get("content", "")).strip(),
+                "source_score": _to_float(hit.get("score")),
+                "raw_content": raw,
+            }
         )
+        docs.append(PremiseDoc(**validated_doc))
 
     docs.sort(key=lambda d: d.source_score, reverse=True)
     return docs
