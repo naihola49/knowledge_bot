@@ -32,6 +32,11 @@ LOW_COVERAGE_THRESHOLD = 0.35
 MAX_TOPICS_DEFAULT = 3
 # Max chars of source/user text quoted inside Node 2 research briefs for the LLM.
 RESEARCH_TOPIC_SNIPPET_MAX_CHARS = 320
+# minimal llm payload for minimized token costs
+NODE2_ANTHROPIC_MAX_WEAK_TOPICS = 4
+NODE2_ANTHROPIC_MAX_RETRIEVED_CHUNKS = 2
+NODE2_ANTHROPIC_MAX_USER_INPUT_CHARS = 240
+NODE2_ANTHROPIC_MAX_TOPICS = 3
 
 """
 Node 3 / premise ingestion
@@ -40,3 +45,9 @@ TAVILY_API_KEY_ENV_VAR = "TAVILY_API_KEY"
 TAVILY_MAX_RESULTS_PER_QUERY = 5
 # "advanced" can be enabled later if needed
 TAVILY_EXTRACT_DEPTH: str | None = None
+
+"""
+Node 2 Anthropic topic compiler
+"""
+ANTHROPIC_API_KEY_ENV_VAR = "ANTHROPIC_API_KEY"
+ANTHROPIC_MODEL_NAME = "claude-haiku-4-5-20251001"

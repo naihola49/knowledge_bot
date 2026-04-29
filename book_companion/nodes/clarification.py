@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
-from book_companion.nodes.node2_methods import build_topic_explanations, extract_candidate_topics
+from book_companion.nodes.node2_methods import (
+    build_topic_explanations,
+    build_topics_with_anthropic,
+    extract_candidate_topics,
+)
 from book_companion.schema.validation import validate_graph_state, validate_output_2
 from book_companion.state import GraphState, Output2
 
@@ -16,10 +20,22 @@ def run_clarification_node(state: GraphState) -> GraphState:
     output_1 = validated_state.get("output_1")
     if output_1 is None:
         validated_output_2 = validate_output_2({"topics": []})
-        return {**validated_state, "output_2": validated_output_2}
+        return {
+            **validated_state,
+            "output_2": validated_output_2,
+            "node2_topic_source": "none",
+        }
 
-    topic_ids = extract_candidate_topics(output_1)
-    topics = build_topic_explanations(output_1, topic_ids)
+    topics = build_topics_with_anthropic(output_1)
+    topic_source = "anthropic"
+    if topics is None:
+        topic_ids = extract_candidate_topics(output_1)
+        topics = build_topic_explanations(output_1, topic_ids)
+        topic_source = "heuristic"
     output_2: Output2 = {"topics": topics}
     validated_output_2 = validate_output_2(output_2)
-    return {**validated_state, "output_2": validated_output_2}
+    return {
+        **validated_state,
+        "output_2": validated_output_2,
+        "node2_topic_source": topic_source,
+    }

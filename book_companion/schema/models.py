@@ -118,6 +118,7 @@ class GraphStateModel(BaseModel):
     output_2: Output2Model | None = None
     output_3: Output3Model | None = None
     output_4: Output4Model | None = None
+    node2_topic_source: Literal["anthropic", "heuristic", "none"] | None = None
 
 
 class ComprehensionInputStateModel(BaseModel):

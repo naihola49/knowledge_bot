@@ -65,3 +65,4 @@ class GraphState(TypedDict, total=False):
     output_2: Output2
     output_3: Output3
     output_4: Output4
+    node2_topic_source: Literal["anthropic", "heuristic", "none"]
