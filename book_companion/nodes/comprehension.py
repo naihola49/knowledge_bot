@@ -22,6 +22,7 @@ from book_companion.nodes.node1_methods import (
     vectorize_texts,
 )
 from book_companion.integrations.bart_nli_inference import get_bart_nli_client
+from book_companion.schema.validation import validate_comprehension_input_state, validate_output_1
 from book_companion.state import GraphState, NLIResult, Output1, RetrievedChunk
 
 
@@ -135,14 +136,15 @@ def run_premise_hypothesis_pipeline(
 
 def run_comprehension_node(state: GraphState) -> GraphState:
     """Read source + user input, run chunk → embed → retrieve → NLI, write output_1"""
-    raw_content_path = Path(state["raw_content_path"])
-    user_input_path = Path(state["user_input_path"])
+    validated_input = validate_comprehension_input_state(state)
+    raw_content_path = Path(validated_input["raw_content_path"])
+    user_input_path = Path(validated_input["user_input_path"])
     raw_content = raw_content_path.read_text(encoding="utf-8")
     user_input = clean_text(user_input_path.read_text(encoding="utf-8"))
 
     word_count = _count_words(user_input)
-    day = state.get("day", "unknown_day")
-    loop_count = state.get("loop_count", 0)
+    day = validated_input.get("day") or "unknown_day"
+    loop_count = validated_input.get("loop_count") or 0
 
     stage = run_premise_hypothesis_pipeline(raw_content, user_input)
     weak_topics = _derive_weak_topics(stage["nli_results"], stage["contradiction_score"])
@@ -164,9 +166,11 @@ def run_comprehension_node(state: GraphState) -> GraphState:
         "coverage_score": stage["coverage_score"],
         "contradiction_score": stage["contradiction_score"],
     }
+    validated_output_1 = validate_output_1(output_1)
 
     score = output_1["comprehension_score"]
-    hit_max_loops = loop_count >= state.get("max_loops", MAX_LOOPS)
+    max_loops = validated_input.get("max_loops") or MAX_LOOPS
+    hit_max_loops = loop_count >= max_loops
 
     if hit_max_loops:
         exit_reason = "max_loops"
@@ -179,11 +183,11 @@ def run_comprehension_node(state: GraphState) -> GraphState:
         store_ready = False
 
     return {
-        **state,
-        "output_1": output_1,
-        "weak_topics": output_1["weak_topics"] or [],
+        **validated_input,
+        "output_1": validated_output_1,
+        "weak_topics": validated_output_1["weak_topics"] or [],
         "store_ready": store_ready,
         "exit_reason": exit_reason,
         "loop_count": loop_count,
-        "max_loops": state.get("max_loops", MAX_LOOPS),
+        "max_loops": max_loops,
     }

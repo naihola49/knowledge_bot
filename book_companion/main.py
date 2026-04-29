@@ -1,4 +1,4 @@
-"""CLI entry point for quick local graph runs."""
+"""CLI entry point for quick local graph runs"""
 
 import json
 from argparse import ArgumentParser # CLI help
