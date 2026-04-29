@@ -21,6 +21,12 @@ Update 4/21: Node ingests output_1 and builds context for downstream, conducted 
 - Weak_topics arg from output_1 utilized, contradiction (from nli) or weak coverage (based on cosine sim) is then passed into research builder.
 - All edge cases between contradiction & weak coverage (if hypothesis incongruous with range(1-k)  semantic chunks), builds confidence score using comprehension score (computed through nli in node 1)
 - Lowest confidence scorfes then passed in to research
+Update 4/29: Anthropic + Heuristic layer added for topic build.
+- Anthropic-first path now runs as compact topic compiler with deterministic JSON contract + LLM hydration
+- Input is minimal from output_1 (scores, weak_topics, short user_input excerpt, small retrieved chunk/NLI slice) to keep token use low!!!
+- Deterministic JSON payload is built first, then Anthropic hydrates only topic/error_explanation/confidence by id
+- If Anthropic is unavailable/fails schema validation, fallback remains heuristic (`extract_candidate_topics` + `build_topic_explanations`)
+- State now records `node2_topic_source` = anthropic | heuristic | none for runtime traceability
 Max output tokens set extremely low for cost savings.
 Input: Output_1
 Output: Output_2
@@ -100,4 +106,29 @@ class Output4(TypedDict):
     synthesis_txt_path: str
     retrieved_chunk_ids: list[str]
     synthesis_text: str
+```
+
+Current Implementation Structure
+```mermaid
+flowchart TD
+    A[CLI main.py] --> B[Graph run_graph_once]
+    B --> C[Node 1 Comprehension]
+    C --> D{Route after comprehension}
+    D -- needs_clarification --> E[Node 2 Clarification]
+    D -- otherwise --> K[next_node: synthesis]
+
+    E --> E1{Topic builder}
+    E1 -->|anthropic first| E2[integrations/anthropic_layer]
+    E2 --> E3[Deterministic skeleton]
+    E3 --> E4[LLM hydration by id]
+    E4 --> E5[Schema validate Output2]
+    E1 -->|fallback| E6[Heuristic topic builder]
+    E6 --> E5
+
+    E5 --> F[Node 3 Research]
+    F --> G[premise_ingestion adapter]
+    G --> H[Tavily search + extract]
+    H --> I[research_brief.md artifact]
+    I --> J[Output3 research_md_path]
+    J --> K[next_node: synthesis]
 ```
