@@ -9,6 +9,7 @@ from book_companion.schema.models import (
     GraphStateModel,
     Output1Model,
     Output2Model,
+    Output3Model,
     PremiseDocModel,
     PremiseIngestionRequestModel,
     QuerySpecModel,
@@ -45,6 +46,13 @@ def validate_output_2(output_2: dict) -> dict:
         return Output2Model.model_validate(output_2).model_dump(exclude_none=False)
     except ValidationError as err:
         _raise_validation_error("output_2", err)
+
+
+def validate_output_3(output_3: dict) -> dict:
+    try:
+        return Output3Model.model_validate(output_3).model_dump(exclude_none=False)
+    except ValidationError as err:
+        _raise_validation_error("output_3", err)
 
 
 def validate_premise_ingestion_request(request: dict) -> dict:
