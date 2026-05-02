@@ -13,6 +13,7 @@ from book_companion.schema.models import (
     PremiseDocModel,
     PremiseIngestionRequestModel,
     QuerySpecModel,
+    RunConfigModel, # entry from cli/yaml 
 )
 
 
@@ -32,6 +33,13 @@ def validate_comprehension_input_state(state: dict) -> dict:
         return ComprehensionInputStateModel.model_validate(state).model_dump(exclude_none=False)
     except ValidationError as err:
         _raise_validation_error("comprehension input", err)
+
+
+def validate_run_config(data: dict) -> RunConfigModel:
+    try:
+        return RunConfigModel.model_validate(data)
+    except ValidationError as err:
+        _raise_validation_error("run_config", err)
 
 
 def validate_output_1(output_1: dict) -> dict:

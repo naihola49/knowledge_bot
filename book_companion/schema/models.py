@@ -131,3 +131,31 @@ class ComprehensionInputStateModel(BaseModel):
     day: str | None = None
     loop_count: int | None = None
     max_loops: int | None = None
+
+
+class RunConfigModel(BaseModel):
+    """YAML/CLI run file: initial graph state inputs (must validate before `run_graph_once`)"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    raw_content_path: str = Field(min_length=1)
+    user_input_path: str = Field(min_length=1)
+    day: str | None = Field(default=None, min_length=1)
+    loop_count: int = Field(default=0, ge=0)
+    max_loops: int | None = Field(default=None, ge=1)
+    run_id: str | None = Field(default=None, min_length=1)
+
+    def to_initial_state(self) -> dict:
+        """Dict compatible with `GraphStateModel` / `run_graph_once` initial input"""
+        payload: dict = {
+            "raw_content_path": self.raw_content_path,
+            "user_input_path": self.user_input_path,
+            "loop_count": self.loop_count,
+        }
+        if self.day is not None:
+            payload["day"] = self.day
+        if self.max_loops is not None:
+            payload["max_loops"] = self.max_loops
+        if self.run_id is not None:
+            payload["run_id"] = self.run_id
+        return payload

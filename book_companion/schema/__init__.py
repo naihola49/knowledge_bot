@@ -6,6 +6,7 @@ from book_companion.schema.models import (
     Output1Model,
     Output2Model,
     Output3Model,
+    RunConfigModel,
 )
 from book_companion.schema.validation import (
     validate_comprehension_input_state,
@@ -16,6 +17,7 @@ from book_companion.schema.validation import (
     validate_premise_doc,
     validate_premise_ingestion_request,
     validate_query_spec,
+    validate_run_config,
 )
 
 __all__ = [
@@ -24,6 +26,7 @@ __all__ = [
     "Output1Model",
     "Output2Model",
     "Output3Model",
+    "RunConfigModel",
     "validate_comprehension_input_state",
     "validate_graph_state",
     "validate_output_1",
@@ -32,4 +35,5 @@ __all__ = [
     "validate_premise_ingestion_request",
     "validate_query_spec",
     "validate_premise_doc",
+    "validate_run_config",
 ]

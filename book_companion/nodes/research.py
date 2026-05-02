@@ -16,7 +16,7 @@ from book_companion.state import GraphState, Output3
 
 def _research_docs_dir(state: dict, day: str) -> Path:
     run_id = str(state.get("run_id") or datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ"))
-    return Path("artifacts") / "research" / day / run_id
+    return Path("agent_docs") / "search_correction" / day / run_id 
 
 
 def _render_research_markdown(day: str, docs: list) -> str:
